@@ -5,6 +5,7 @@ const visit = require('unist-util-visit');
 function codeImport(options = {}) {
   return function transformer(tree, file) {
     const codes = [];
+    const promises = [];
 
     visit(tree, 'code', (node, index, parent) => {
       codes.push([node, index, parent]);
@@ -23,18 +24,28 @@ function codeImport(options = {}) {
       const fileAbsPath = path.resolve(file.dirname, filePath);
 
       if (options.async) {
-        fs.readFile(fileAbsPath, 'utf8', (err, fileContent) => {
-          if (err) {
-            throw err;
-          }
+        promises.push(
+          new Promise((resolve, reject) => {
+            fs.readFile(fileAbsPath, 'utf8', (err, fileContent) => {
+              if (err) {
+                reject(err);
+                return;
+              }
 
-          node.value = fileContent;
-        });
+              node.value = fileContent;
+              resolve();
+            });
+          })
+        );
       } else {
         const fileContent = fs.readFileSync(fileAbsPath, 'utf8');
 
         node.value = fileContent;
       }
+    }
+
+    if (promises.length) {
+      return Promise.all(promises);
     }
   };
 }
