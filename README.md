@@ -2,6 +2,8 @@
 
 📝 Populate code blocks from files
 
+[![npm version](https://badge.fury.io/js/remark-code-import.svg)](https://badge.fury.io/js/remark-code-import)
+
 The plain remark version of [`gatsby-remark-import-code`](https://github.com/pomber/gatsby-remark-import-code).
 
 ## Installation
