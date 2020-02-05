@@ -15,6 +15,10 @@ function codeImport(options = {}) {
         .split(' ')
         .find(meta => meta.startsWith('file='));
 
+      if (!fileMeta) {
+        return;
+      }
+
       const filePath = fileMeta.slice('file='.length);
       const fileAbsPath = path.resolve(file.dirname, filePath);
 
