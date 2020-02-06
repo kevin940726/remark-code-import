@@ -17,7 +17,7 @@ function codeImport(options = {}) {
         .find(meta => meta.startsWith('file='));
 
       if (!fileMeta) {
-        return;
+        continue;
       }
 
       const filePath = fileMeta.slice('file='.length);
@@ -32,7 +32,7 @@ function codeImport(options = {}) {
                 return;
               }
 
-              node.value = fileContent;
+              node.value = fileContent.trim();
               resolve();
             });
           })
@@ -40,7 +40,7 @@ function codeImport(options = {}) {
       } else {
         const fileContent = fs.readFileSync(fileAbsPath, 'utf8');
 
-        node.value = fileContent;
+        node.value = fileContent.trim();
       }
     }
 
