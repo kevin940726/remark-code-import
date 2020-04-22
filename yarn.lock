@@ -4,10 +4,17 @@
 __metadata:
   version: 4
 
-"@types/unist@npm:^2.0.0":
+"@types/unist@npm:^2.0.0, @types/unist@npm:^2.0.2":
   version: 2.0.3
   resolution: "@types/unist@npm:2.0.3"
   checksum: f9188e0f569124fab8a963a95aa990030a582c05205f36237f970b64fd6f14299bdb8602127180c8cd58261714743459b6fe4e94233d2c4f28ede7b95bd8eb99
+  languageName: node
+  linkType: hard
+
+"is-buffer@npm:^2.0.0":
+  version: 2.0.4
+  resolution: "is-buffer@npm:2.0.4"
+  checksum: e576d6a92dea50fa7a74024f6d4b3ea30d9e9c7db85ad721ab4ac7fcb4c8a1e681c5f7951bae6a8a16e33b76c36f8be1a601f3dd82378e8e71eaf4fa1c45e906
   languageName: node
   linkType: hard
 
@@ -25,14 +32,50 @@ __metadata:
   resolution: "remark-code-import@workspace:."
   dependencies:
     prettier: 1.19.1
+    to-gatsby-remark-plugin: ^0.1.0
     unist-util-visit: ^2.0.1
   languageName: unknown
   linkType: soft
+
+"replace-ext@npm:1.0.0":
+  version: 1.0.0
+  resolution: "replace-ext@npm:1.0.0"
+  checksum: fe62c33a3f0a323ca98fe6a61e85db4fbf1081945fb1c03c2e618e04b3fc55e8b1ed14cf4a76ca37b5f403bade42dab760557cd32beca0bf01a6bd52803a0ab4
+  languageName: node
+  linkType: hard
+
+"to-gatsby-remark-plugin@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "to-gatsby-remark-plugin@npm:0.1.0"
+  dependencies:
+    to-vfile: ^6.1.0
+  checksum: b65cce63205ee0b7ac0a851ccbfff29b222fdc3d8b15e1567ee4d09a66c99fd327691fc78da31fa5671e7a9d9133b5e5b69ed7b37d1feb60ba2d577ddceff24d
+  languageName: node
+  linkType: hard
+
+"to-vfile@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "to-vfile@npm:6.1.0"
+  dependencies:
+    is-buffer: ^2.0.0
+    vfile: ^4.0.0
+  checksum: cd06d6b0b2f4b9f5174c68e25a9db58114c0859c3872ee16c909daa07f0947df228a1ae199137cf14d3016a48a0cc5351299f486fe5c86f7362967cb72046d8a
+  languageName: node
+  linkType: hard
 
 "unist-util-is@npm:^4.0.0":
   version: 4.0.1
   resolution: "unist-util-is@npm:4.0.1"
   checksum: 4c114151b04196f90bc246232e28bbba70d795f589223f6fbc0ff2f338420f34e6eb5c653f08961a42844ba77ff935fb0889830ac6c57c4257569e0156d34f68
+  languageName: node
+  linkType: hard
+
+"unist-util-stringify-position@npm:^2.0.0":
+  version: 2.0.3
+  resolution: "unist-util-stringify-position@npm:2.0.3"
+  dependencies:
+    "@types/unist": ^2.0.2
+  checksum: 841de8e6d5df9edc858ce88f2b56dc4f062fbda82a4d4af8bf151f41f7ed67a79735e9adb67e1c83e666650c6ed37171d094178c3481f793f00ec41548ca492d
   languageName: node
   linkType: hard
 
@@ -54,5 +97,28 @@ __metadata:
     unist-util-is: ^4.0.0
     unist-util-visit-parents: ^3.0.0
   checksum: 74f0d2190b29560fd6b9493945990103bef67f3a28e6de0692e0ed3c8f655149f9c11d401c3b1f3e60d3e71c39b38af4c824961ec814b6ad0a0349b097456374
+  languageName: node
+  linkType: hard
+
+"vfile-message@npm:^2.0.0":
+  version: 2.0.4
+  resolution: "vfile-message@npm:2.0.4"
+  dependencies:
+    "@types/unist": ^2.0.0
+    unist-util-stringify-position: ^2.0.0
+  checksum: 6a3b64da62f384edb97816e1a5e070048ac85b3f3a0b2d925b2c21bca85e25b928592efcf6cb9fd9e62cd43740e5ac037b43e2ec2803623371ce6d1139f09396
+  languageName: node
+  linkType: hard
+
+"vfile@npm:^4.0.0":
+  version: 4.1.0
+  resolution: "vfile@npm:4.1.0"
+  dependencies:
+    "@types/unist": ^2.0.0
+    is-buffer: ^2.0.0
+    replace-ext: 1.0.0
+    unist-util-stringify-position: ^2.0.0
+    vfile-message: ^2.0.0
+  checksum: 592dee4d9cd2940df6977801d151e43566dd5750b53f1a40e0616f04da54896754cbfe0ecb59ce1efc01a7760230c823abfc73decf21b502018c0273fb0c7b81
   languageName: node
   linkType: hard

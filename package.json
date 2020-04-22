@@ -10,7 +10,8 @@
     "url": "git+https://github.com/kevin940726/remark-code-import.git"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "gatsby"
   ],
   "keywords": [
     "remark",
@@ -19,9 +20,12 @@
     "code-block",
     "code-fence",
     "file-system",
-    "import-code"
+    "import-code",
+    "gatsby",
+    "gatsby-plugin"
   ],
   "dependencies": {
+    "to-gatsby-remark-plugin": "^0.1.0",
     "unist-util-visit": "^2.0.1"
   },
   "devDependencies": {

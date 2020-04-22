@@ -33,11 +33,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "locationDiscardData": [
     ],
     "locationLengthData": [
+      114,
       104,
+      102,
       88,
       82,
       80,
+      78,
+      74,
       73,
+      72,
+      66,
       2
     ],
     "packageRegistryData": [
@@ -46,6 +52,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["prettier", "npm:1.19.1"],
+            ["to-gatsby-remark-plugin", "npm:0.1.0"],
             ["unist-util-visit", "npm:2.0.1"]
           ],
           "linkType": "SOFT"
@@ -56,6 +63,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-unist-npm-2.0.3-4b26dedfde-1.zip/node_modules/@types/unist/",
           "packageDependencies": [
             ["@types/unist", "npm:2.0.3"]
+          ],
+          "linkType": "HARD"
+        }]
+      ]],
+      ["is-buffer", [
+        ["npm:2.0.4", {
+          "packageLocation": "./.yarn/cache/is-buffer-npm-2.0.4-ce097f06a1-1.zip/node_modules/is-buffer/",
+          "packageDependencies": [
+            ["is-buffer", "npm:2.0.4"]
           ],
           "linkType": "HARD"
         }]
@@ -75,9 +91,40 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["remark-code-import", "workspace:."],
             ["prettier", "npm:1.19.1"],
+            ["to-gatsby-remark-plugin", "npm:0.1.0"],
             ["unist-util-visit", "npm:2.0.1"]
           ],
           "linkType": "SOFT"
+        }]
+      ]],
+      ["replace-ext", [
+        ["npm:1.0.0", {
+          "packageLocation": "./.yarn/cache/replace-ext-npm-1.0.0-5d4ecb34ac-1.zip/node_modules/replace-ext/",
+          "packageDependencies": [
+            ["replace-ext", "npm:1.0.0"]
+          ],
+          "linkType": "HARD"
+        }]
+      ]],
+      ["to-gatsby-remark-plugin", [
+        ["npm:0.1.0", {
+          "packageLocation": "./.yarn/cache/to-gatsby-remark-plugin-npm-0.1.0-1f09c418a3-1.zip/node_modules/to-gatsby-remark-plugin/",
+          "packageDependencies": [
+            ["to-gatsby-remark-plugin", "npm:0.1.0"],
+            ["to-vfile", "npm:6.1.0"]
+          ],
+          "linkType": "HARD"
+        }]
+      ]],
+      ["to-vfile", [
+        ["npm:6.1.0", {
+          "packageLocation": "./.yarn/cache/to-vfile-npm-6.1.0-2f0d0b4806-1.zip/node_modules/to-vfile/",
+          "packageDependencies": [
+            ["to-vfile", "npm:6.1.0"],
+            ["is-buffer", "npm:2.0.4"],
+            ["vfile", "npm:4.1.0"]
+          ],
+          "linkType": "HARD"
         }]
       ]],
       ["unist-util-is", [
@@ -85,6 +132,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/unist-util-is-npm-4.0.1-2754fc9f60-1.zip/node_modules/unist-util-is/",
           "packageDependencies": [
             ["unist-util-is", "npm:4.0.1"]
+          ],
+          "linkType": "HARD"
+        }]
+      ]],
+      ["unist-util-stringify-position", [
+        ["npm:2.0.3", {
+          "packageLocation": "./.yarn/cache/unist-util-stringify-position-npm-2.0.3-abaa9bf961-1.zip/node_modules/unist-util-stringify-position/",
+          "packageDependencies": [
+            ["unist-util-stringify-position", "npm:2.0.3"],
+            ["@types/unist", "npm:2.0.3"]
           ],
           "linkType": "HARD"
         }]
@@ -108,6 +165,31 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["unist-util-visit-parents", "npm:3.0.1"],
             ["@types/unist", "npm:2.0.3"],
             ["unist-util-is", "npm:4.0.1"]
+          ],
+          "linkType": "HARD"
+        }]
+      ]],
+      ["vfile", [
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/vfile-npm-4.1.0-1cc6244e34-1.zip/node_modules/vfile/",
+          "packageDependencies": [
+            ["vfile", "npm:4.1.0"],
+            ["@types/unist", "npm:2.0.3"],
+            ["is-buffer", "npm:2.0.4"],
+            ["replace-ext", "npm:1.0.0"],
+            ["unist-util-stringify-position", "npm:2.0.3"],
+            ["vfile-message", "npm:2.0.4"]
+          ],
+          "linkType": "HARD"
+        }]
+      ]],
+      ["vfile-message", [
+        ["npm:2.0.4", {
+          "packageLocation": "./.yarn/cache/vfile-message-npm-2.0.4-ca3f9b6719-1.zip/node_modules/vfile-message/",
+          "packageDependencies": [
+            ["vfile-message", "npm:2.0.4"],
+            ["@types/unist", "npm:2.0.3"],
+            ["unist-util-stringify-position", "npm:2.0.3"]
           ],
           "linkType": "HARD"
         }]

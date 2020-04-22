@@ -18,6 +18,17 @@ See [**Using plugins**](https://github.com/remarkjs/remark/blob/master/doc/plugi
 
 It can also be used in various of libraries using `remark`: [MDX](https://mdxjs.com/advanced/plugins#using-remark-and-rehype-plugins), [Gatsby `gatsby-plugin-mdx`](https://www.gatsbyjs.org/docs/mdx/plugins/#remark-plugins), [Storybook docs](https://github.com/storybookjs/storybook/tree/master/addons/docs#manual-configuration), etc.
 
+## Use as Gatsby remark plugin
+
+Just use the `/gatsby` endpoint. It's possible through [`to-gatsby-remark-plugin`](https://github.com/kevin940726/to-gatsby-remark-plugin).
+
+```js
+{
+  resolve: 'remark-code-import/gatsby',
+  options: {}
+}
+```
+
 ## Usage
 
 Transform:
