@@ -52,6 +52,10 @@ The file path is relative to the markdown file path.
 
 - `async`: By default, this plugin uses `readFileSync` to read the contents of the files. Set this to `true` if you want to use `readFile` for non-blocking IO.
 
+## Testing
+
+After installing dependencies with `yarn`, the tests can be run with: `yarn test`
+
 ## License
 
 Kai Hao
