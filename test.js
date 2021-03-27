@@ -46,3 +46,26 @@ test('File import using line numbers', () => {
     "
   `);
 });
+
+const inputWithSingleLineNumber = `
+\`\`\`js file=./__fixtures__/say-hi.js#L1
+\`\`\`
+`;
+
+test('File import using single line number', () => {
+  expect(
+    remark()
+      .use(codeImport, {})
+      .processSync({
+        contents: inputWithSingleLineNumber,
+        path: path.resolve('test.md'),
+      })
+      .toString()
+  ).toMatchInlineSnapshot(`
+    "\`\`\`js file=./__fixtures__/say-hi.js#L1
+    console.log('Hello remark-code-import!');
+    \`\`\`
+    "
+  `);
+});
+
