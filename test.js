@@ -3,7 +3,7 @@ const remark = require('remark');
 const path = require('path');
 
 const input = (q) => `
-\`\`\`js file=./__fixtures__/say-hi.js${q}
+\`\`\`js file=./__fixtures__/say-#-hi.js${q}
 \`\`\`
 `
 
@@ -17,7 +17,7 @@ test('Basic file import', () => {
       })
       .toString()
   ).toMatchInlineSnapshot(`
-    "\`\`\`js file=./__fixtures__/say-hi.js
+    "\`\`\`js file=./__fixtures__/say-#-hi.js
     console.log('Hello remark-code-import!');
     console.log('This is another line...');
     console.log('This is the last line');
@@ -37,7 +37,7 @@ test('File import using line numbers', () => {
       })
       .toString()
   ).toMatchInlineSnapshot(`
-    "\`\`\`js file=./__fixtures__/say-hi.js#L2-L3
+    "\`\`\`js file=./__fixtures__/say-#-hi.js#L2-L3
     console.log('This is another line...');
     console.log('This is the last line');
     \`\`\`
@@ -55,7 +55,7 @@ test('File import using single line number', () => {
       })
       .toString()
   ).toMatchInlineSnapshot(`
-    "\`\`\`js file=./__fixtures__/say-hi.js#L1
+    "\`\`\`js file=./__fixtures__/say-#-hi.js#L1
     console.log('Hello remark-code-import!');
     \`\`\`
     "
@@ -72,7 +72,7 @@ test('File import using single line number and preceding lines', () => {
       })
       .toString()
   ).toMatchInlineSnapshot(`
-    "\`\`\`js file=./__fixtures__/say-hi.js#-L2
+    "\`\`\`js file=./__fixtures__/say-#-hi.js#-L2
     console.log('Hello remark-code-import!');
     console.log('This is another line...');
     \`\`\`
@@ -90,7 +90,7 @@ test('File import using single line number and following lines', () => {
       })
       .toString()
   ).toMatchInlineSnapshot(`
-    "\`\`\`js file=./__fixtures__/say-hi.js#L2-
+    "\`\`\`js file=./__fixtures__/say-#-hi.js#L2-
     console.log('This is another line...');
     console.log('This is the last line');
     console.log('Oops, here is is another');
