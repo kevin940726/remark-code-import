@@ -48,6 +48,24 @@ console.log('Hello remark-code-import!');
 
 The file path is relative to the markdown file path.
 
+You may also specify specific lines or ranges:
+
+````md
+```js file=./say-hi.js#L3
+```
+
+```js file=./say-hi.js#L3-L6
+```
+
+```js file=./say-hi.js#L3-
+```
+
+```js file=./say-hi.js#-L6
+```
+````
+
+
+
 ## Options
 
 - `async`: By default, this plugin uses `readFileSync` to read the contents of the files. Set this to `true` if you want to use `readFile` for non-blocking IO.
