@@ -2,10 +2,10 @@ const codeImport = require('./');
 const remark = require('remark');
 const path = require('path');
 
-const input = (q) => `
+const input = q => `
 \`\`\`js file=./__fixtures__/say-#-hi.js${q}
 \`\`\`
-`
+`;
 
 test('Basic file import', () => {
   expect(
@@ -62,22 +62,16 @@ test('File import using single line number', () => {
   `);
 });
 
-test('File import using single line number and preceding lines', () => {
-  expect(
+test("Only following lines (e.g. #-L10) doesn't work", () => {
+  expect(() => {
     remark()
       .use(codeImport, {})
       .processSync({
         contents: input('#-L2'),
         path: path.resolve('test.md'),
       })
-      .toString()
-  ).toMatchInlineSnapshot(`
-    "\`\`\`js file=./__fixtures__/say-#-hi.js#-L2
-    console.log('Hello remark-code-import!');
-    console.log('This is another line...');
-    \`\`\`
-    "
-  `);
+      .toString();
+  }).toThrow();
 });
 
 test('File import using single line number and following lines', () => {
