@@ -1,6 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 const visit = require('unist-util-visit');
+const EOL = require('os').EOL;
+
+const extractLines = (content, fromLine, hasDash, toLine) => {
+  if (fromLine === undefined && toLine === undefined) {
+    return content;
+  }
+  const lines = content.split(EOL);
+  toLine = !toLine && hasDash ? lines.length - 1 : toLine || fromLine;
+  fromLine = fromLine || 1;
+  return lines.slice(fromLine - 1, toLine).join('\n');
+};
 
 function codeImport(options = {}) {
   return function transformer(tree, file) {
@@ -20,7 +31,16 @@ function codeImport(options = {}) {
         continue;
       }
 
-      const filePath = fileMeta.slice('file='.length);
+      const res = /^file=(?<path>.+?)(?:(?:#(?:L(?<from>\d+)(?<dash>-)?)?)(?:L(?<to>\d+))?)?$/.exec(
+        fileMeta
+      );
+      if (!res || !res.groups || !res.groups.path) {
+        throw new Error(`Unable to parse file path ${fileMeta}`);
+      }
+      const filePath = res.groups.path;
+      const hasDash = !!res.groups.dash;
+      const fromLine = res.groups.from ? parseInt(res.groups.from) : undefined;
+      const toLine = res.groups.to ? parseInt(res.groups.to) : undefined;
       const fileAbsPath = path.resolve(file.dirname, filePath);
 
       if (options.async) {
@@ -32,7 +52,12 @@ function codeImport(options = {}) {
                 return;
               }
 
-              node.value = fileContent.trim();
+              node.value = extractLines(
+                fileContent,
+                fromLine,
+                hasDash,
+                toLine
+              ).trim();
               resolve();
             });
           })
@@ -40,7 +65,12 @@ function codeImport(options = {}) {
       } else {
         const fileContent = fs.readFileSync(fileAbsPath, 'utf8');
 
-        node.value = fileContent.trim();
+        node.value = extractLines(
+          fileContent,
+          fromLine,
+          hasDash,
+          toLine
+        ).trim();
       }
     }
 
