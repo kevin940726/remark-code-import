@@ -1,7 +1,7 @@
 {
   "name": "remark-code-import",
   "description": "📝 Populate code blocks from files",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "index.js",
   "author": "Kai Hao",
   "license": "MIT",
