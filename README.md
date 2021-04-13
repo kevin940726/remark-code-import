@@ -9,6 +9,10 @@ The plain remark version of [`gatsby-remark-import-code`](https://github.com/pom
 ## Installation
 
 ```sh
+# npm
+npm install -D remark-code-import
+
+# yarn
 yarn add -D remark-code-import
 ```
 
