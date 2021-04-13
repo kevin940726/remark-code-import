@@ -21,7 +21,7 @@ test('Basic file import', () => {
     console.log('Hello remark-code-import!');
     console.log('This is another line...');
     console.log('This is the last line');
-    console.log('Oops, here is is another');
+    console.log('Oops, here is another');
     \`\`\`
     "
   `);
@@ -87,7 +87,7 @@ test('File import using single line number and following lines', () => {
     "\`\`\`js file=./__fixtures__/say-#-hi.js#L2-
     console.log('This is another line...');
     console.log('This is the last line');
-    console.log('Oops, here is is another');
+    console.log('Oops, here is another');
     \`\`\`
     "
   `);

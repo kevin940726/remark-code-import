@@ -1,17 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 const visit = require('unist-util-visit');
-const EOL = require('os').EOL;
+const { EOL } = require('os');
 
-const extractLines = (content, fromLine, hasDash, toLine) => {
+function extractLines(content, fromLine, hasDash, toLine) {
   if (fromLine === undefined && toLine === undefined) {
     return content;
   }
   const lines = content.split(EOL);
-  toLine = !toLine && hasDash ? lines.length - 1 : toLine || fromLine;
-  fromLine = fromLine || 1;
-  return lines.slice(fromLine - 1, toLine).join('\n');
-};
+  const start = fromLine || 1;
+  const end = hasDash ? toLine || lines.length : start;
+  return lines.slice(start - 1, end).join('\n');
+}
 
 function codeImport(options = {}) {
   return function transformer(tree, file) {
@@ -39,8 +39,10 @@ function codeImport(options = {}) {
       }
       const filePath = res.groups.path;
       const hasDash = !!res.groups.dash;
-      const fromLine = res.groups.from ? parseInt(res.groups.from) : undefined;
-      const toLine = res.groups.to ? parseInt(res.groups.to) : undefined;
+      const fromLine = res.groups.from
+        ? parseInt(res.groups.from, 10)
+        : undefined;
+      const toLine = res.groups.to ? parseInt(res.groups.to, 10) : undefined;
       const fileAbsPath = path.resolve(file.dirname, filePath);
 
       if (options.async) {

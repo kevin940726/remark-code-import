@@ -59,9 +59,6 @@ You may also specify specific lines or ranges:
 
 ```js file=./say-hi.js#L3-
 ```
-
-```js file=./say-hi.js#-L6
-```
 ````
 
 
