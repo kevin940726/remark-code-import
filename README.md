@@ -73,7 +73,7 @@ You may also specify specific lines or ranges:
 
 ## Testing
 
-After installing dependencies with `yarn`, the tests can be run with: `yarn test`
+After installing dependencies with `npm install`, the tests can be run with: `npm test`
 
 ## License
 
