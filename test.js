@@ -92,3 +92,23 @@ test('File import using single line number and following lines', () => {
     "
   `);
 });
+
+
+test('File from STDIN', () => {
+  expect(
+    remark()
+      .use(codeImport, {})
+      .processSync({
+        contents: input('#L2-'),
+        path: { ...path.resolve('test.md'), dirname: undefined },
+      })
+      .toString()
+  ).toMatchInlineSnapshot(`
+    "\`\`\`js file=./__fixtures__/say-#-hi.js#L2-
+    console.log('This is another line...');
+    console.log('This is the last line');
+    console.log('Oops, here is another');
+    \`\`\`
+    "
+  `);
+});

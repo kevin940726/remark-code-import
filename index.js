@@ -43,7 +43,7 @@ function codeImport(options = {}) {
         ? parseInt(res.groups.from, 10)
         : undefined;
       const toLine = res.groups.to ? parseInt(res.groups.to, 10) : undefined;
-      const fileAbsPath = path.resolve(file.dirname, filePath);
+      const fileAbsPath = path.resolve(file.dirname || ".", filePath);
 
       if (options.async) {
         promises.push(
