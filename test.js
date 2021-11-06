@@ -132,3 +132,26 @@ test('Preserve trailing newline and indentation', () => {
     "
   `);
 });
+
+test('Remove redundant indentations', () => {
+  expect(
+    remark()
+      .use(codeImport, { removeRedundantIndentations: true })
+      .processSync({
+        contents: `
+\`\`\`js file=./__fixtures__/indentation.js#L7-L10
+\`\`\`
+`,
+        path: path.resolve('test.md'),
+      })
+      .toString()
+  ).toMatchInlineSnapshot(`
+    "\`\`\`js file=./__fixtures__/indentation.js#L7-L10
+    if (true) {
+      while (false)
+        console.log('nested');
+    }
+    \`\`\`
+    "
+  `);
+});

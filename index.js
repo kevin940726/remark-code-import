@@ -25,6 +25,20 @@ function extractLines(
   return lines.slice(start - 1, end).join('\n');
 }
 
+// Modified from strip-indent
+// See https://github.com/sindresorhus/strip-indent/blob/main/license
+function removeRedundantIndentations(content) {
+  const match = content.match(/^[ \t]*(?=\S)/gm);
+  if (!match) {
+    return content;
+  }
+  const minIndent = Math.min(...match.slice(1).map(indent => indent.length));
+  if (minIndent === 0) {
+    return content;
+  }
+  return content.replace(new RegExp(`^[ \\t]{${minIndent}}`, 'gm'), '');
+}
+
 function codeImport(options = {}) {
   return function transformer(tree, file) {
     const codes = [];
@@ -73,6 +87,9 @@ function codeImport(options = {}) {
                 toLine,
                 options.preserveTrailingNewline
               );
+              if (options.removeRedundantIndentations) {
+                node.value = removeRedundantIndentations(node.value);
+              }
               resolve();
             });
           })
@@ -87,6 +104,9 @@ function codeImport(options = {}) {
           toLine,
           options.preserveTrailingNewline
         );
+        if (options.removeRedundantIndentations) {
+          node.value = removeRedundantIndentations(node.value);
+        }
       }
     }
 
