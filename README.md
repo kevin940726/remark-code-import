@@ -70,6 +70,7 @@ You may also specify specific lines or ranges:
 ## Options
 
 - `async`: By default, this plugin uses `readFileSync` to read the contents of the files. Set this to `true` if you want to use `readFile` for non-blocking IO.
+- `preserveTrailingNewline`: By default, this plugin will trim the trailing newline of the file when importing the code. You can preserve the trailing new line in the code block by setting this option to `true`.
 
 ## Testing
 

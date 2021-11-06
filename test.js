@@ -92,3 +92,43 @@ test('File import using single line number and following lines', () => {
     "
   `);
 });
+
+test('Preserve trailing newline and indentation', () => {
+  expect(
+    remark()
+      .use(codeImport, { preserveTrailingNewline: true })
+      .processSync({
+        contents: input(''),
+        path: path.resolve('test.md'),
+      })
+      .toString()
+  ).toMatchInlineSnapshot(`
+    "\`\`\`js file=./__fixtures__/say-#-hi.js
+    console.log('Hello remark-code-import!');
+    console.log('This is another line...');
+    console.log('This is the last line');
+    console.log('Oops, here is another');
+
+    \`\`\`
+    "
+  `);
+
+  expect(
+    remark()
+      .use(codeImport, {})
+      .processSync({
+        contents: `
+\`\`\`js file=./__fixtures__/indentation.js#L2-L3
+\`\`\`
+`,
+        path: path.resolve('test.md'),
+      })
+      .toString()
+  ).toMatchInlineSnapshot(`
+    "\`\`\`js file=./__fixtures__/indentation.js#L2-L3
+      console.log('indentation');
+    	return 'indentation';
+    \`\`\`
+    "
+  `);
+});
