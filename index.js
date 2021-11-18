@@ -69,7 +69,12 @@ function codeImport(options = {}) {
         : undefined;
       const hasDash = !!res.groups.dash || fromLine === undefined;
       const toLine = res.groups.to ? parseInt(res.groups.to, 10) : undefined;
-      const fileAbsPath = path.resolve(file.dirname, filePath);
+
+      if (!options.basePath && !file.dirname) {
+        throw new Error("Unable to parse base file path. Please configure options.basePath or modify your tooling to include path data, like mdxOptions.filepath.")
+      }
+
+      const fileAbsPath = path.resolve(options.basePath || file.dirname, filePath);
 
       if (options.async) {
         promises.push(
