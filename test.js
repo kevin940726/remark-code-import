@@ -1,9 +1,21 @@
 const codeImport = require('./');
 const remark = require('remark');
 const path = require('path');
+const os = require('os');
 
 const input = q => `
 \`\`\`js file=./__fixtures__/say-#-hi.js${q}
+\`\`\`
+`;
+
+const basePathTestPath = path.resolve(process.cwd(), 'gatsby');
+const basePathTestInput = q => `
+\`\`\`js file=../__fixtures__/say-#-hi.js${q}
+\`\`\`
+`;
+
+const absolutePathTestInput = q => `
+\`\`\`js file=${path.normalize(process.cwd())}/__fixtures__/say-#-hi.js${q}
 \`\`\`
 `;
 
@@ -25,6 +37,60 @@ test('Basic file import', () => {
     \`\`\`
     "
   `);
+});
+
+test('Absolute file import', () => {
+  expect(
+    remark()
+      .use(codeImport, {})
+      .processSync({
+        contents: absolutePathTestInput(''),
+        path: path.resolve('test.md'),
+      })
+      .toString()
+  ).toBe(`\`\`\`js file=${path.normalize(process.cwd())}/__fixtures__/say-#-hi.js
+console.log('Hello remark-code-import!');${os.EOL}console.log('This is another line...');${os.EOL}console.log('This is the last line');${os.EOL}console.log('Oops, here is another');
+\`\`\`
+`);
+});
+
+test('Basic file import with basePath', () => {
+  expect(
+    remark()
+      .use(codeImport, {
+        basePath: basePathTestPath,
+      })
+      .processSync({
+        contents: basePathTestInput(''),
+        path: path.resolve('test.md'),
+      })
+      .toString()
+  ).toMatchInlineSnapshot(`
+    "\`\`\`js file=../__fixtures__/say-#-hi.js
+    console.log('Hello remark-code-import!');
+    console.log('This is another line...');
+    console.log('This is the last line');
+    console.log('Oops, here is another');
+    \`\`\`
+    "
+  `);
+});
+
+test('Absolute file import with basePath', () => {
+  expect(
+    remark()
+      .use(codeImport, {
+        basePath: basePathTestPath,
+      })
+      .processSync({
+        contents: absolutePathTestInput(''),
+        path: path.resolve('test.md'),
+      })
+      .toString()
+  ).toBe(`\`\`\`js file=${path.normalize(process.cwd())}/__fixtures__/say-#-hi.js
+console.log('Hello remark-code-import!');${os.EOL}console.log('This is another line...');${os.EOL}console.log('This is the last line');${os.EOL}console.log('Oops, here is another');
+\`\`\`
+`);
 });
 
 test('File import using line numbers', () => {
