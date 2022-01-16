@@ -1,6 +1,6 @@
 # `remark-code-import`
 
-📝 Populate code blocks from files
+📝 Populate code blocks from files.
 
 [![npm version](https://badge.fury.io/js/remark-code-import.svg)](https://badge.fury.io/js/remark-code-import)
 
@@ -18,9 +18,15 @@ yarn add -D remark-code-import
 
 ## Setup
 
-See [**Using plugins**](https://github.com/remarkjs/remark/blob/master/doc/plugins.md#using-plugins) in the official documentation.
+The plugin can be imported via named export, there's no default export.
 
-It can also be used in various of libraries using `remark`: [MDX](https://mdxjs.com/advanced/plugins#using-remark-and-rehype-plugins), [Gatsby `gatsby-plugin-mdx`](https://www.gatsbyjs.org/docs/mdx/plugins/#remark-plugins), [Storybook docs](https://github.com/storybookjs/storybook/tree/master/addons/docs#manual-configuration), etc.
+```js
+import { codeImport } from 'remark-code-import';
+```
+
+See [**Using plugins**](https://github.com/remarkjs/remark/blob/master/doc/plugins.md#using-plugins) for more instructions in the official documentation.
+
+It can also be used in various of libraries: `remark`: [MDX](https://mdxjs.com/advanced/plugins#using-remark-and-rehype-plugins), [Gatsby `gatsby-plugin-mdx`](https://www.gatsbyjs.org/docs/mdx/plugins/#remark-plugins), [Storybook docs](https://github.com/storybookjs/storybook/tree/master/addons/docs#manual-configuration).
 
 ## Usage
 
@@ -41,7 +47,7 @@ console.log('Hello remark-code-import!');
 
 The file path is relative to the markdown file path.
 
-You may also specify specific lines or ranges:
+You may also specify lines or ranges:
 
 ````md
 Only line 3:
@@ -57,8 +63,6 @@ Line 3 to the end of the file
 ```
 ````
 
-
-
 ## Options
 
 - `async`: By default, this plugin uses `readFileSync` to read the contents of the files. Set this to `true` if you want to use `readFile` for non-blocking IO.
@@ -73,7 +77,6 @@ Line 3 to the end of the file
   First line
     Second line
   ```
-
 
 ## Use as a Gatsby remark plugin
 
