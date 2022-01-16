@@ -10,6 +10,8 @@ interface CodeImportOptions {
   async?: boolean;
   preserveTrailingNewline?: boolean;
   removeRedundantIndentations?: boolean;
+  rootDir?: string;
+  allowImportingFromOutside?: boolean;
 }
 
 function extractLines(
@@ -35,6 +37,12 @@ function extractLines(
 }
 
 function codeImport(options: CodeImportOptions = {}) {
+  const rootDir = options.rootDir || process.cwd();
+
+  if (!path.isAbsolute(rootDir)) {
+    throw new Error(`"rootDir" has to be an absolute path`);
+  }
+
   return function transformer(tree: Root, file: VFile) {
     const codes: [Code, number | null, Parent][] = [];
     const promises: Promise<void>[] = [];
@@ -45,8 +53,9 @@ function codeImport(options: CodeImportOptions = {}) {
 
     for (const [node] of codes) {
       const fileMeta = (node.meta || '')
-        .split(' ')
-        .find(meta => meta.startsWith('file='));
+        // Allow escaping spaces
+        .split(/(?<!\\) /g)
+        .find((meta) => meta.startsWith('file='));
 
       if (!fileMeta) {
         continue;
@@ -56,9 +65,10 @@ function codeImport(options: CodeImportOptions = {}) {
         throw new Error('"file" should be an instance of VFile');
       }
 
-      const res = /^file=(?<path>.+?)(?:(?:#(?:L(?<from>\d+)(?<dash>-)?)?)(?:L(?<to>\d+))?)?$/.exec(
-        fileMeta
-      );
+      const res =
+        /^file=(?<path>.+?)(?:(?:#(?:L(?<from>\d+)(?<dash>-)?)?)(?:L(?<to>\d+))?)?$/.exec(
+          fileMeta
+        );
       if (!res || !res.groups || !res.groups.path) {
         throw new Error(`Unable to parse file path ${fileMeta}`);
       }
@@ -68,7 +78,23 @@ function codeImport(options: CodeImportOptions = {}) {
         : undefined;
       const hasDash = !!res.groups.dash || fromLine === undefined;
       const toLine = res.groups.to ? parseInt(res.groups.to, 10) : undefined;
-      const fileAbsPath = path.resolve(file.dirname, filePath);
+      const normalizedFilePath = filePath
+        .replace(/^<rootDir>/, rootDir)
+        .replace(/\\ /g, ' ');
+      const fileAbsPath = path.resolve(file.dirname, normalizedFilePath);
+
+      if (!options.allowImportingFromOutside) {
+        const relativePathFromRootDir = path.relative(rootDir, fileAbsPath);
+        if (
+          !rootDir ||
+          relativePathFromRootDir.startsWith(`..${path.sep}`) ||
+          path.isAbsolute(relativePathFromRootDir)
+        ) {
+          throw new Error(
+            `Attempted to import code from "${fileAbsPath}", which is outside from the rootDir "${rootDir}"`
+          );
+        }
+      }
 
       if (options.async) {
         promises.push(

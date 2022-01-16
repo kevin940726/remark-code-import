@@ -1,12 +1,14 @@
 import { codeImport } from './';
 import { remark } from 'remark';
 import { VFile } from 'vfile';
-import path from 'path';
+import path from 'node:path';
+import fs from 'node:fs';
+import { jest } from '@jest/globals';
 
 /**
  * @param {string} value
  */
-const vfile = value =>
+const vfile = (value) =>
   new VFile({
     value,
     path: path.resolve('./test.md'),
@@ -15,7 +17,7 @@ const vfile = value =>
 /**
  * @param {string} q
  */
-const input = q => `
+const input = (q) => `
 \`\`\`js file=./__fixtures__/say-#-hi.js${q}
 \`\`\`
 `;
@@ -131,7 +133,6 @@ test('Remove redundant indentations', () => {
   expect(
     remark()
       .use(codeImport, { removeRedundantIndentations: true })
-
       .processSync(
         vfile(`
 \`\`\`js file=./__fixtures__/indentation.js#L7-L10
@@ -148,4 +149,116 @@ test('Remove redundant indentations', () => {
     \`\`\`
     "
   `);
+});
+
+test('Allow escaped spaces in paths', () => {
+  expect(
+    remark()
+      .use(codeImport)
+      .processSync(
+        vfile(`
+\`\`\`js file=./__fixtures__/filename\\ with\\ spaces.js
+\`\`\`
+`)
+      )
+      .toString()
+  ).toMatchInlineSnapshot(`
+    "\`\`\`js file=./__fixtures__/filename\\\\ with\\\\ spaces.js
+    console.log('filename with spaces');
+    \`\`\`
+    "
+  `);
+});
+
+describe('options.rootDir', () => {
+  test('Defaults to process.cwd()', () => {
+    expect(
+      remark()
+        .use(codeImport)
+        .processSync(
+          vfile(`
+\`\`\`js file=<rootDir>/__fixtures__/say-#-hi.js#L1
+\`\`\`
+  `)
+        )
+        .toString()
+    ).toMatchInlineSnapshot(`
+      "\`\`\`js file=<rootDir>/__fixtures__/say-#-hi.js#L1
+      console.log('Hello remark-code-import!');
+      \`\`\`
+      "
+    `);
+  });
+
+  test('Passing custom rootDir', () => {
+    expect(
+      remark()
+        .use(codeImport, { rootDir: path.resolve('__fixtures__') })
+        .processSync(
+          vfile(`
+\`\`\`js file=<rootDir>/say-#-hi.js#L1
+\`\`\`
+  `)
+        )
+        .toString()
+    ).toMatchInlineSnapshot(`
+      "\`\`\`js file=<rootDir>/say-#-hi.js#L1
+      console.log('Hello remark-code-import!');
+      \`\`\`
+      "
+    `);
+  });
+
+  test('Throw when passing non-absolute path', () => {
+    expect(() => {
+      remark()
+        .use(codeImport, { rootDir: '__fixtures__' })
+        .processSync(
+          vfile(`
+\`\`\`js file=<rootDir>/say-#-hi.js#L1
+\`\`\`
+  `)
+        )
+        .toString();
+    }).toThrow();
+  });
+});
+
+describe('options.allowImportingFromOutside', () => {
+  test('defaults to throw when importing from outside', () => {
+    expect(() => {
+      remark()
+        .use(codeImport)
+        .processSync(
+          vfile(`
+\`\`\`js file=../some-file
+\`\`\`
+  `)
+        )
+        .toString();
+    }).toThrow();
+  });
+
+  test('Allow if the option is specified', () => {
+    jest.spyOn(fs, 'readFileSync').mockImplementationOnce(() => `Some file`);
+
+    expect(
+      remark()
+        .use(codeImport, { allowImportingFromOutside: true })
+        .processSync(
+          vfile(`
+\`\`\`js file=../some-file
+\`\`\`
+  `)
+        )
+        .toString()
+    ).toMatchInlineSnapshot(`
+      "\`\`\`js file=../some-file
+      Some file
+      \`\`\`
+      "
+    `);
+
+    fs.readFileSync.mockRestore();
+  });
 });

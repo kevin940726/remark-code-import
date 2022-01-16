@@ -9,11 +9,7 @@
 ## Installation
 
 ```sh
-# npm
 npm install -D remark-code-import
-
-# yarn
-yarn add -D remark-code-import
 ```
 
 ## Setup
@@ -45,7 +41,12 @@ console.log('Hello remark-code-import!');
 ```
 ````
 
-The file path is relative to the markdown file path.
+The file path is relative to the markdown file path. You can use `<rootDir>` at the start of the path to import files relatively from the [`rootDir`](#options):
+
+````md
+```js file=<rootDir>/file-under-root-directory.js
+```
+````
 
 You may also specify lines or ranges:
 
@@ -63,11 +64,19 @@ Line 3 to the end of the file
 ```
 ````
 
+File paths with spaces should be escaped with `\`:
+
+````md
+```js file=./file\ with\ spaces.js
+```
+````
+
 ## Options
 
-- `async`: By default, this plugin uses `readFileSync` to read the contents of the files. Set this to `true` if you want to use `readFile` for non-blocking IO.
-- `preserveTrailingNewline`: By default, this plugin will trim the trailing newline of the file when importing the code. You can preserve the trailing new line in the code block by setting this option to `true`.
-- `removeRedundantIndentations`: Set to `true` to remove redundant indentations for each line. For instance, the imported code of:
+- `async: boolean`: By default, this plugin uses `readFileSync` to read the contents of the files. Set this to `true` if you want to use `readFile` for non-blocking IO.
+- `rootDir: string`: Change what `<rootDir>` refers to. Defaults to `process.cwd()`.
+- `preserveTrailingNewline: boolean`: By default, this plugin will trim the trailing newline of the file when importing the code. You can preserve the trailing new line in the code block by setting this option to `true`.
+- `removeRedundantIndentations: boolean`: Set to `true` to remove redundant indentations for each line. For instance, the imported code of:
   ```
     First line
       Second line
@@ -77,6 +86,7 @@ Line 3 to the end of the file
   First line
     Second line
   ```
+- `allowImportingFromOutside: boolean`: For security reasons, by default this plugin doesn't allow importing files from outside the root directory (`rootDir`). Set this option to `true` to bypass this limit.
 
 ## Use as a Gatsby remark plugin
 
