@@ -4,7 +4,7 @@
 
 [![npm version](https://badge.fury.io/js/remark-code-import.svg)](https://badge.fury.io/js/remark-code-import)
 
-**Starting from v1.0.0, the plugin is now [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+**Starting from v1.0.0, the plugin is now [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). Node 12+ is needed to use it and it must be `import`ed instead of `require`d.**
 
 ## Installation
 
