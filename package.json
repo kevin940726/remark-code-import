@@ -2,15 +2,20 @@
   "name": "remark-code-import",
   "description": "📝 Populate code blocks from files",
   "version": "0.4.0",
-  "main": "index.js",
+  "engines": {
+    "node": ">= 12"
+  },
+  "type": "module",
+  "exports": "./dist/index.js",
   "author": "Kai Hao",
   "license": "MIT",
+  "homepage": "https://github.com/kevin940726/remark-code-import#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kevin940726/remark-code-import.git"
   },
   "files": [
-    "index.js",
+    "dist",
     "gatsby"
   ],
   "keywords": [
@@ -25,16 +30,22 @@
     "gatsby-plugin"
   ],
   "scripts": {
-    "test": "jest"
+    "build": "tsc",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "prepare": "npm run build && npm test"
   },
   "dependencies": {
+    "strip-indent": "^4.0.0",
     "to-gatsby-remark-plugin": "^0.1.0",
-    "unist-util-visit": "^2.0.1"
+    "unist-util-visit": "^4.1.0"
   },
   "devDependencies": {
-    "jest": "^26.6.3",
+    "jest": "^27.4.7",
+    "mdast": "^3.0.0",
     "prettier": "1.19.1",
-    "remark": "^13.0.0"
+    "remark": "^14.0.2",
+    "typescript": "4.4.4",
+    "vfile": "^5.3.0"
   },
   "prettier": {
     "singleQuote": true,

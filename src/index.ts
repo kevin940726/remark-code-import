@@ -1,14 +1,23 @@
-const fs = require('fs');
-const path = require('path');
-const visit = require('unist-util-visit');
-const { EOL } = require('os');
+import fs from 'node:fs';
+import path from 'node:path';
+import { EOL } from 'node:os';
+import { visit } from 'unist-util-visit';
+import stripIndent from 'strip-indent';
+import type { Root, Code, Parent } from 'mdast';
+import type { VFile } from 'vfile';
+
+interface CodeImportOptions {
+  async?: boolean;
+  preserveTrailingNewline?: boolean;
+  removeRedundantIndentations?: boolean;
+}
 
 function extractLines(
-  content,
-  fromLine,
-  hasDash,
-  toLine,
-  preserveTrailingNewline = false
+  content: string,
+  fromLine: number | undefined,
+  hasDash: boolean,
+  toLine: number | undefined,
+  preserveTrailingNewline: boolean = false
 ) {
   const lines = content.split(EOL);
   const start = fromLine || 1;
@@ -25,27 +34,13 @@ function extractLines(
   return lines.slice(start - 1, end).join('\n');
 }
 
-// Modified from strip-indent
-// See https://github.com/sindresorhus/strip-indent/blob/main/license
-function removeRedundantIndentations(content) {
-  const match = content.match(/^[ \t]*(?=\S)/gm);
-  if (!match) {
-    return content;
-  }
-  const minIndent = Math.min(...match.slice(1).map(indent => indent.length));
-  if (minIndent === 0) {
-    return content;
-  }
-  return content.replace(new RegExp(`^[ \\t]{${minIndent}}`, 'gm'), '');
-}
-
-function codeImport(options = {}) {
-  return function transformer(tree, file) {
-    const codes = [];
-    const promises = [];
+function codeImport(options: CodeImportOptions = {}) {
+  return function transformer(tree: Root, file: VFile) {
+    const codes: [Code, number | null, Parent][] = [];
+    const promises: Promise<void>[] = [];
 
     visit(tree, 'code', (node, index, parent) => {
-      codes.push([node, index, parent]);
+      codes.push([node as Code, index, parent as Parent]);
     });
 
     for (const [node] of codes) {
@@ -55,6 +50,10 @@ function codeImport(options = {}) {
 
       if (!fileMeta) {
         continue;
+      }
+
+      if (!file.dirname) {
+        throw new Error('"file" should be an instance of VFile');
       }
 
       const res = /^file=(?<path>.+?)(?:(?:#(?:L(?<from>\d+)(?<dash>-)?)?)(?:L(?<to>\d+))?)?$/.exec(
@@ -73,7 +72,7 @@ function codeImport(options = {}) {
 
       if (options.async) {
         promises.push(
-          new Promise((resolve, reject) => {
+          new Promise<void>((resolve, reject) => {
             fs.readFile(fileAbsPath, 'utf8', (err, fileContent) => {
               if (err) {
                 reject(err);
@@ -88,7 +87,7 @@ function codeImport(options = {}) {
                 options.preserveTrailingNewline
               );
               if (options.removeRedundantIndentations) {
-                node.value = removeRedundantIndentations(node.value);
+                node.value = stripIndent(node.value);
               }
               resolve();
             });
@@ -105,7 +104,7 @@ function codeImport(options = {}) {
           options.preserveTrailingNewline
         );
         if (options.removeRedundantIndentations) {
-          node.value = removeRedundantIndentations(node.value);
+          node.value = stripIndent(node.value);
         }
       }
     }
@@ -116,4 +115,4 @@ function codeImport(options = {}) {
   };
 }
 
-module.exports = codeImport;
+export { codeImport };

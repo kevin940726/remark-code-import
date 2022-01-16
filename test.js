@@ -1,7 +1,20 @@
-const codeImport = require('./');
-const remark = require('remark');
-const path = require('path');
+import { codeImport } from './';
+import { remark } from 'remark';
+import { VFile } from 'vfile';
+import path from 'path';
 
+/**
+ * @param {string} value
+ */
+const vfile = value =>
+  new VFile({
+    value,
+    path: path.resolve('./test.md'),
+  });
+
+/**
+ * @param {string} q
+ */
 const input = q => `
 \`\`\`js file=./__fixtures__/say-#-hi.js${q}
 \`\`\`
@@ -11,10 +24,7 @@ test('Basic file import', () => {
   expect(
     remark()
       .use(codeImport, {})
-      .processSync({
-        contents: input(''),
-        path: path.resolve('test.md'),
-      })
+      .processSync(vfile(input('')))
       .toString()
   ).toMatchInlineSnapshot(`
     "\`\`\`js file=./__fixtures__/say-#-hi.js
@@ -31,10 +41,7 @@ test('File import using line numbers', () => {
   expect(
     remark()
       .use(codeImport, {})
-      .processSync({
-        contents: input(`#L2-L3`),
-        path: path.resolve('test.md'),
-      })
+      .processSync(vfile(input('#L2-L3')))
       .toString()
   ).toMatchInlineSnapshot(`
     "\`\`\`js file=./__fixtures__/say-#-hi.js#L2-L3
@@ -49,10 +56,7 @@ test('File import using single line number', () => {
   expect(
     remark()
       .use(codeImport, {})
-      .processSync({
-        contents: input('#L1'),
-        path: path.resolve('test.md'),
-      })
+      .processSync(vfile(input('#L1')))
       .toString()
   ).toMatchInlineSnapshot(`
     "\`\`\`js file=./__fixtures__/say-#-hi.js#L1
@@ -66,10 +70,7 @@ test("Only following lines (e.g. #-L10) doesn't work", () => {
   expect(() => {
     remark()
       .use(codeImport, {})
-      .processSync({
-        contents: input('#-L2'),
-        path: path.resolve('test.md'),
-      })
+      .processSync(vfile(input('#-L2')))
       .toString();
   }).toThrow();
 });
@@ -78,10 +79,7 @@ test('File import using single line number and following lines', () => {
   expect(
     remark()
       .use(codeImport, {})
-      .processSync({
-        contents: input('#L2-'),
-        path: path.resolve('test.md'),
-      })
+      .processSync(vfile(input('#L2-')))
       .toString()
   ).toMatchInlineSnapshot(`
     "\`\`\`js file=./__fixtures__/say-#-hi.js#L2-
@@ -97,10 +95,7 @@ test('Preserve trailing newline and indentation', () => {
   expect(
     remark()
       .use(codeImport, { preserveTrailingNewline: true })
-      .processSync({
-        contents: input(''),
-        path: path.resolve('test.md'),
-      })
+      .processSync(vfile(input('')))
       .toString()
   ).toMatchInlineSnapshot(`
     "\`\`\`js file=./__fixtures__/say-#-hi.js
@@ -116,13 +111,12 @@ test('Preserve trailing newline and indentation', () => {
   expect(
     remark()
       .use(codeImport, {})
-      .processSync({
-        contents: `
+      .processSync(
+        vfile(`
 \`\`\`js file=./__fixtures__/indentation.js#L2-L3
 \`\`\`
-`,
-        path: path.resolve('test.md'),
-      })
+`)
+      )
       .toString()
   ).toMatchInlineSnapshot(`
     "\`\`\`js file=./__fixtures__/indentation.js#L2-L3
@@ -137,13 +131,13 @@ test('Remove redundant indentations', () => {
   expect(
     remark()
       .use(codeImport, { removeRedundantIndentations: true })
-      .processSync({
-        contents: `
+
+      .processSync(
+        vfile(`
 \`\`\`js file=./__fixtures__/indentation.js#L7-L10
 \`\`\`
-`,
-        path: path.resolve('test.md'),
-      })
+`)
+      )
       .toString()
   ).toMatchInlineSnapshot(`
     "\`\`\`js file=./__fixtures__/indentation.js#L7-L10
