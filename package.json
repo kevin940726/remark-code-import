@@ -7,6 +7,7 @@
   },
   "type": "module",
   "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "author": "Kai Hao",
   "license": "MIT",
   "homepage": "https://github.com/kevin940726/remark-code-import#readme",
