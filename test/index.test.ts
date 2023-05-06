@@ -1,23 +1,17 @@
-import codeImport from './';
+import { vi, describe, test, expect } from 'vitest';
+import codeImport from '../';
 import { remark } from 'remark';
 import { VFile } from 'vfile';
 import path from 'node:path';
 import fs from 'node:fs';
-import { jest } from '@jest/globals';
 
-/**
- * @param {string} value
- */
-const vfile = (value) =>
+const vfile = (value: string) =>
   new VFile({
     value,
     path: path.resolve('./test.md'),
   });
 
-/**
- * @param {string} q
- */
-const input = (q) => `
+const input = (q: string) => `
 \`\`\`js file=./__fixtures__/say-#-hi.js${q}
 \`\`\`
 `;
@@ -240,7 +234,9 @@ describe('options.allowImportingFromOutside', () => {
   });
 
   test('Allow if the option is specified', () => {
-    jest.spyOn(fs, 'readFileSync').mockImplementationOnce(() => `Some file`);
+    const mocked = vi
+      .spyOn(fs, 'readFileSync')
+      .mockImplementationOnce(() => `Some file`);
 
     expect(
       remark()
@@ -259,6 +255,6 @@ describe('options.allowImportingFromOutside', () => {
       "
     `);
 
-    fs.readFileSync.mockRestore();
+    mocked.mockRestore();
   });
 });
