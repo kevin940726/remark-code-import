@@ -17,7 +17,7 @@ npm install -D remark-code-import
 The plugin can be imported via named export, there's no default export.
 
 ```js
-import { codeImport } from 'remark-code-import';
+import codeImport from 'remark-code-import';
 ```
 
 See [**Using plugins**](https://github.com/remarkjs/remark/blob/master/doc/plugins.md#using-plugins) for more instructions in the official documentation.

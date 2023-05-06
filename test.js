@@ -1,4 +1,4 @@
-import { codeImport } from './';
+import codeImport from './';
 import { remark } from 'remark';
 import { VFile } from 'vfile';
 import path from 'node:path';
