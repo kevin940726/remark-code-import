@@ -1,13 +1,13 @@
-import fs from 'node:fs';
+import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { EOL } from 'node:os';
 import { visit } from 'unist-util-visit';
 import stripIndent from 'strip-indent';
-import type { Root, Code, Parent } from 'mdast';
+import type { Node, Code, Parent } from 'mdast';
 import type { VFile } from 'vfile';
+import type { Plugin } from 'unified';
 
 interface CodeImportOptions {
-  async?: boolean;
   preserveTrailingNewline?: boolean;
   removeRedundantIndentations?: boolean;
   rootDir?: string;
@@ -36,15 +36,15 @@ function extractLines(
   return lines.slice(start - 1, end).join('\n');
 }
 
-function codeImport(options: CodeImportOptions = {}) {
+const codeImport: Plugin<[CodeImportOptions]> = (options = {}) => {
   const rootDir = options.rootDir || process.cwd();
 
   if (!path.isAbsolute(rootDir)) {
     throw new Error(`"rootDir" has to be an absolute path`);
   }
 
-  return function transformer(tree: Root, file: VFile) {
-    const codes: [Code, number | null, Parent][] = [];
+  return async function transformer(tree: Node, file: VFile): Promise<void> {
+    const codes: [Code, number | undefined, Parent][] = [];
     const promises: Promise<void>[] = [];
 
     visit(tree, 'code', (node, index, parent) => {
@@ -96,50 +96,31 @@ function codeImport(options: CodeImportOptions = {}) {
         }
       }
 
-      if (options.async) {
-        promises.push(
-          new Promise<void>((resolve, reject) => {
-            fs.readFile(fileAbsPath, 'utf8', (err, fileContent) => {
-              if (err) {
-                reject(err);
-                return;
-              }
+      promises.push(
+        (async () => {
+          const fileContent = await fsp.readFile(fileAbsPath, 'utf8');
 
-              node.value = extractLines(
-                fileContent,
-                fromLine,
-                hasDash,
-                toLine,
-                options.preserveTrailingNewline
-              );
-              if (options.removeRedundantIndentations) {
-                node.value = stripIndent(node.value);
-              }
-              resolve();
-            });
-          })
-        );
-      } else {
-        const fileContent = fs.readFileSync(fileAbsPath, 'utf8');
-
-        node.value = extractLines(
-          fileContent,
-          fromLine,
-          hasDash,
-          toLine,
-          options.preserveTrailingNewline
-        );
-        if (options.removeRedundantIndentations) {
-          node.value = stripIndent(node.value);
-        }
-      }
+          node.value = extractLines(
+            fileContent,
+            fromLine,
+            hasDash,
+            toLine,
+            options.preserveTrailingNewline
+          );
+          if (options.removeRedundantIndentations) {
+            node.value = stripIndent(node.value);
+          }
+        })()
+      );
     }
 
     if (promises.length) {
-      return Promise.all(promises);
+      await Promise.all(promises);
+
+      return;
     }
   };
-}
+};
 
 export { codeImport };
 export default codeImport;
